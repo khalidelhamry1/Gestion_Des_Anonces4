@@ -1,23 +1,15 @@
 package PFE.Gestion_Des_Anonces.Api.Controllers;
 
-import PFE.Gestion_Des_Anonces.Api.Services.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/Admin")
 public class AdminController {
-    private AdminService adminService;
 
-    public AdminService getAdminService() {
-        return adminService;
-    }
-
-    public void setAdminService(AdminService adminService) {
-        this.adminService = adminService;
-    }
-
-    @Autowired
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
+    @GetMapping(path = "/hello")
+    public String hello(){
+        return  "hello admin !";
     }
 }
