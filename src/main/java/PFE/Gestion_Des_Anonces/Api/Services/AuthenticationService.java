@@ -1,7 +1,7 @@
 package PFE.Gestion_Des_Anonces.Api.Services;
 
 import PFE.Gestion_Des_Anonces.Api.Config.JwtService;
-import PFE.Gestion_Des_Anonces.Api.Models.DTO_CLASSES.LOGIN_REQUEST_DTO;
+import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.LOGIN_REQUEST_DTO;
 import PFE.Gestion_Des_Anonces.Api.Models.Role.RoleRepository;
 import PFE.Gestion_Des_Anonces.Api.Models.User.User;
 import PFE.Gestion_Des_Anonces.Api.Models.User.UserRepository;
@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -33,10 +31,9 @@ public class AuthenticationService {
 
 
     public ResponseEntity<String> register(User request) {
-        System.out.println("Registring !");
         List<User> userList = userRepository.findByEmail(request.getEmail());
         boolean UserExists = userList.size() == 1;
-        if(UserExists) {//exists
+        if(UserExists) {
             return ResponseEntity.status(401).build();
         }
         User user = User.builder()
@@ -52,19 +49,10 @@ public class AuthenticationService {
         }
 
     public ResponseEntity<String> authenticate(LOGIN_REQUEST_DTO request) {
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
-
-
         List<User> userList = userRepository.findByEmail(request.email());
         if(userList.size() == 0){
             return ResponseEntity.status(401).build();
         }
-        System.out.println("User Found !");
         User user = userList.get(0);
         if(user != null){
             boolean samePassword = passwordEncoder.matches(request.password(),user.getPassword());
@@ -76,4 +64,20 @@ public class AuthenticationService {
         return ResponseEntity.status(401).build();
     }
 
+    public ResponseEntity<Boolean> isTokenValid(String token) {
+        try {
+            String email = jwtService.extractEmail(token);
+            List<User> userList = userRepository.findByEmail(email);
+            if (userList.size() == 0) {
+                return ResponseEntity.ok().body(false);
+            }
+            User user = userList.get(0);
+            if (jwtService.isTokenValid(token, user)) {
+                return ResponseEntity.ok().body(true);
+            }
+            return ResponseEntity.ok().body(false);
+        }catch (Exception e){
+            return ResponseEntity.ok().body(false);
+        }
+    }
 }
