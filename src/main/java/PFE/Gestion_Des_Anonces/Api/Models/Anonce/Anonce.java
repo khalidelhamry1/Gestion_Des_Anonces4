@@ -27,7 +27,8 @@ public class Anonce implements Serializable {
     private long idAnonce;
     private int surface , nbreSalleBain , nbreEtages , nbreChambres;
     private float prix, latitude , longitude ;
-    private char type , etat;
+    private char type ;
+    private Boolean enabled=true;
     private Timestamp dateCreationAnonce;
 
     private String email;

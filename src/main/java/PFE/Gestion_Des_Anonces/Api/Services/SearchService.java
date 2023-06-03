@@ -12,7 +12,10 @@ import PFE.Gestion_Des_Anonces.Api.utils.SearchFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -38,24 +41,28 @@ public class SearchService {
 */
 
     public List<ANONCE_DTO_SEARCH> filterSearch(SearchFilter filter) {
-        List<Anonce> anonces;
-        if(filter.getCategories().length == 0){
-            anonces = anonceRepository.getWithFilterNoCategories(
-                    filter.getMinPrix(),
-                    filter.getMaxPrix(),
-                    filter.getChambres(),
-                    filter.getSalles(),
-                    "%"+filter.getVille()+"%"
-            );
-        }else {
-            anonces = anonceRepository.getWithFilter(
-                    filter.getMinPrix(),
-                    filter.getMaxPrix(),
-                    filter.getChambres(),
-                    filter.getSalles(),
-                    "%"+filter.getVille()+"%",
-                    filter.getCategories()
-            );
+        List<Anonce> anonces = anonceRepository.getWithFilterNoCategories(
+                filter.getMinPrix(),
+                filter.getMaxPrix(),
+                filter.getChambres(),
+                filter.getSalles(),
+                "%"+filter.getVille()+"%"
+        );
+        if(filter.getCategories().length != 0){
+            List<String> FilterCategories = Arrays.asList(filter.getCategories());
+            List<Anonce> FilteredAnonces = new ArrayList<Anonce>();
+            for(Anonce anonce : anonces){
+                if(anonce.getCategories().size() >= FilterCategories.size()) {
+                    int i=0;
+                    int count=0;
+                    while( i < anonce.getCategories().size() && count != FilterCategories.size()) {
+                        if (FilterCategories.contains(anonce.getCategories().get(i).getIdCategorie()))count++;
+                        i++;
+                    };
+                    if(count == FilterCategories.size())FilteredAnonces.add(anonce);
+                }
+            }
+            anonces = FilteredAnonces;
         }
         List<ANONCE_DTO_SEARCH> DTOS = anonces.stream().map(anonce -> new ANONCE_DTO_SEARCH(
                 anonce.getIdAnonce(),
@@ -64,7 +71,7 @@ public class SearchService {
                 anonce.getLatitude(),
                 anonce.getLongitude(),
                 anonce.getType(),
-                anonce.getEtat(),
+                anonce.getEnabled(),
                 anonce.getImageUrl(),
                 anonce.getNomAnonce(),
                 anonce.getIdVille().getIdVille(),
@@ -82,7 +89,7 @@ public class SearchService {
                 anonce.getLatitude(),
                 anonce.getLongitude(),
                 anonce.getType(),
-                anonce.getEtat(),
+                anonce.getEnabled(),
                 anonce.getImageUrl(),
                 anonce.getNomAnonce(),
                 anonce.getIdVille().getIdVille(),

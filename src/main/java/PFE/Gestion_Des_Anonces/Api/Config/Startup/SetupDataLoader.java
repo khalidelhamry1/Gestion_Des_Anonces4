@@ -164,7 +164,7 @@ public class SetupDataLoader implements
         List<Anonce> anonces = List.of(
                 Anonce.builder()
                         .email("email@email.com")
-                        .etat('A')
+                        .enabled(true)
                         .dateCreationAnonce(Timestamp.valueOf(LocalDateTime.now()))
                         .description("Nestled amidst breathtaking  decor, plush furnishings.")
                         .idProprietaire(user1)
@@ -182,7 +182,7 @@ public class SetupDataLoader implements
                         .build(),
                 Anonce.builder()
                         .email("email@email.com")
-                        .etat('A')
+                        .enabled(true)
                         .dateCreationAnonce(Timestamp.valueOf(LocalDateTime.now()))
                         .description("Nestled amidst breathtaking  decor, plush furnishings.")
                         .idProprietaire(user1)
@@ -200,7 +200,7 @@ public class SetupDataLoader implements
                         .build(),
                 Anonce.builder()
                         .email("email@email.com")
-                        .etat('A')
+                        .enabled(true)
                         .dateCreationAnonce(Timestamp.valueOf(LocalDateTime.now()))
                         .description("Nestled amidst breathtaking  decor, plush furnishings.")
                         .idProprietaire(user1)
