@@ -25,4 +25,14 @@ public class SearchController {
         return searchService.filterSearch(filter);
     }
 
+    @GetMapping(path = "/villes")
+    public List<String> getVilles(){
+        return searchService.getVilles();
+    }
+
+    @GetMapping(path = "/categories")
+    public List<String> getCategories(){
+        return searchService.getCategories();
+    }
+
 }

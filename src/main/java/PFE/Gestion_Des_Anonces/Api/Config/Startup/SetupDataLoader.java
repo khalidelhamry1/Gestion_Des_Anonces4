@@ -96,40 +96,50 @@ public class SetupDataLoader implements
         user1.setRoles(membreRole);
         user1.setEnabled(true);
         userRepository.save(user1);
+        saveAnonces();
+        saveAnonces();
+        saveAnonces();
+        saveAnonces();
+        saveAnonces();
+        alreadySetup = true;
+    }
+
+    private void saveAnonces(){
+        User user1 = userRepository.findAll().get(1);
         List<Commentaire> comments = List.of(
                 Commentaire.builder()
-                .contenu("Hadchi nadi nadi bezaf!")
-                .idMembre(user1)
-                .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
-                .build(),
+                        .contenu("Hadchi nadi nadi bezaf!")
+                        .idMembre(user1)
+                        .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
+                        .build(),
                 Commentaire.builder()
-                .contenu("Hadchi nadi nadi bezaf!")
-                .idMembre(user1)
-                .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
-                .build(),
+                        .contenu("Hadchi nadi nadi bezaf!")
+                        .idMembre(user1)
+                        .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
+                        .build(),
                 Commentaire.builder()
-                .contenu("Hadchi nadi nadi bezaf!")
-                .idMembre(user1)
-                .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
-                .build(),
+                        .contenu("Hadchi nadi nadi bezaf!")
+                        .idMembre(user1)
+                        .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
+                        .build(),
                 Commentaire.builder()
-                .contenu("Hadchi nadi nadi bezaf!")
-                .idMembre(user1)
-                .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
-                .build()
+                        .contenu("Hadchi nadi nadi bezaf!")
+                        .idMembre(user1)
+                        .DatePublication(Timestamp.valueOf(LocalDateTime.now()))
+                        .build()
         );
         for(Commentaire C : comments){
             commentaireRepository.save(C);
         }
         List<Categorie> Categories = List.of(
                 Categorie
-                .builder()
-                .idCategorie("Appartement")
-                .build(),
+                        .builder()
+                        .idCategorie("Appartement")
+                        .build(),
                 Categorie
-                .builder()
-                .idCategorie("Piscine")
-                .build()
+                        .builder()
+                        .idCategorie("Piscine")
+                        .build()
         );
         for(Categorie C : Categories){
             categorieRepository.save(C);
@@ -194,7 +204,7 @@ public class SetupDataLoader implements
                         .dateCreationAnonce(Timestamp.valueOf(LocalDateTime.now()))
                         .description("Nestled amidst breathtaking  decor, plush furnishings.")
                         .idProprietaire(user1)
-                        .imageUrl("https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2")
+                        .imageUrl("https://i.insider.com/60ae84bea412370019d321ff?width=700")
                         .latitude((float)Math.random()*90)
                         .longitude((float)Math.random()*180)
                         .nomAnonce("Serena Hub")
@@ -211,10 +221,7 @@ public class SetupDataLoader implements
             X.setCommentaires(comments);
             X.setIdVille(casa);
         }
-        List<Anonce> anonces1 = new ArrayList<>(anonces);
-        List<Anonce> anonces2 = new ArrayList<>(anonces);
         anonceRepository.saveAll(anonces);
-        alreadySetup = true;
     }
 
     @Transactional

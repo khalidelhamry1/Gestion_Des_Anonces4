@@ -3,6 +3,10 @@ package PFE.Gestion_Des_Anonces.Api.Services;
 
 import PFE.Gestion_Des_Anonces.Api.Models.Anonce.Anonce;
 import PFE.Gestion_Des_Anonces.Api.Models.Anonce.AnonceRepository;
+import PFE.Gestion_Des_Anonces.Api.Models.Categorie.Categorie;
+import PFE.Gestion_Des_Anonces.Api.Models.Categorie.CategorieRepository;
+import PFE.Gestion_Des_Anonces.Api.Models.Ville.Ville;
+import PFE.Gestion_Des_Anonces.Api.Models.Ville.VilleRepository;
 import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.ANONCE_DTO_SEARCH;
 import PFE.Gestion_Des_Anonces.Api.utils.SearchFilter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,12 @@ public class SearchService {
     @Autowired
     private final AnonceRepository anonceRepository;
 
+    @Autowired
+    private final VilleRepository villeRepository;
+
+    @Autowired
+    private final CategorieRepository categorieRepository;
+
 /*
      minPrix,
      maxPrix,
@@ -29,7 +39,7 @@ public class SearchService {
 
     public List<ANONCE_DTO_SEARCH> filterSearch(SearchFilter filter) {
         List<Anonce> anonces;
-        if(filter.getCategories() == null){
+        if(filter.getCategories().length == 0){
             anonces = anonceRepository.getWithFilterNoCategories(
                     filter.getMinPrix(),
                     filter.getMaxPrix(),
@@ -55,6 +65,7 @@ public class SearchService {
                 anonce.getLongitude(),
                 anonce.getType(),
                 anonce.getEtat(),
+                anonce.getImageUrl(),
                 anonce.getNomAnonce(),
                 anonce.getIdVille().getIdVille(),
                 anonce.getIdVille().getIdRegion().getIdRegion()
@@ -72,9 +83,20 @@ public class SearchService {
                 anonce.getLongitude(),
                 anonce.getType(),
                 anonce.getEtat(),
+                anonce.getImageUrl(),
                 anonce.getNomAnonce(),
                 anonce.getIdVille().getIdVille(),
                 anonce.getIdVille().getIdRegion().getIdRegion()
         )).toList();
+    }
+
+    public List<String> getVilles() {
+        List<Ville> villes = villeRepository.findAll();
+        return villes.stream().map(ville -> ville.getIdVille()).toList();
+    }
+
+    public List<String> getCategories() {
+        List<Categorie> categories = categorieRepository.findAll();
+        return  categories.stream().map(categorie -> categorie.getIdCategorie()).toList();
     }
 }
