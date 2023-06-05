@@ -7,10 +7,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 @RestController
@@ -28,16 +27,20 @@ public class AuthenticationController {
         return authenticationService.register(request);
     }
     @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticate(
+    public ResponseEntity<Map<String,String>> authenticate(
             @RequestBody @NonNull LOGIN_REQUEST_DTO request
     ) {
+        System.out.println("Authentication requested");
         return authenticationService.authenticate(request);
     }
+    @GetMapping("/VerifyToken")
+    public ResponseEntity<Boolean> isUser(){
+        return ResponseEntity.ok().body(true);
+    }
 
-    @PostMapping("/VerifyToken")
-    public ResponseEntity<Boolean> isExpired(@RequestBody String token){
-        System.out.print(token);
-        return authenticationService.isTokenValid(token);
+    @GetMapping("/VerifyTokenAdmin")
+    public ResponseEntity<Boolean> isAdmin(){
+        return ResponseEntity.ok().body(true);
     }
 
 }

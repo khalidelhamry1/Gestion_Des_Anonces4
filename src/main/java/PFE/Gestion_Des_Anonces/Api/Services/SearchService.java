@@ -7,16 +7,19 @@ import PFE.Gestion_Des_Anonces.Api.Models.Categorie.Categorie;
 import PFE.Gestion_Des_Anonces.Api.Models.Categorie.CategorieRepository;
 import PFE.Gestion_Des_Anonces.Api.Models.Ville.Ville;
 import PFE.Gestion_Des_Anonces.Api.Models.Ville.VilleRepository;
+import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.ANONCE_DTO_HUB;
 import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.ANONCE_DTO_SEARCH;
+import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.COMMENTAIRE_DTO;
+import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.USER_COMMENT_DTO;
 import PFE.Gestion_Des_Anonces.Api.utils.SearchFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,16 +33,7 @@ public class SearchService {
 
     @Autowired
     private final CategorieRepository categorieRepository;
-
-/*
-     minPrix,
-     maxPrix,
-     chambres,
-     salles,
-     ville,
-     Categories
-*/
-
+    
     public List<ANONCE_DTO_SEARCH> filterSearch(SearchFilter filter) {
         List<Anonce> anonces = anonceRepository.getWithFilterNoCategories(
                 filter.getMinPrix(),
@@ -81,7 +75,7 @@ public class SearchService {
     }
 
     public List<ANONCE_DTO_SEARCH> getAll() {
-        List<Anonce> anonces = anonceRepository.findAll();
+        List<Anonce> anonces = anonceRepository.findAll().stream().filter(anonce -> anonce.getEnabled()).toList();
         return anonces.stream().map(anonce -> new ANONCE_DTO_SEARCH(
                 anonce.getIdAnonce(),
                 0,
@@ -106,4 +100,35 @@ public class SearchService {
         List<Categorie> categories = categorieRepository.findAll();
         return  categories.stream().map(categorie -> categorie.getIdCategorie()).toList();
     }
+
+    public ANONCE_DTO_HUB getAnonce(Long id) {
+        Optional<Anonce> anonce = anonceRepository.findById(id);
+        if(anonce.isEmpty()){
+            return null;
+        }
+        Anonce A = anonce.get();
+        List<COMMENTAIRE_DTO> comments = A.getCommentaires().stream().map(
+                commentaire -> new COMMENTAIRE_DTO(
+                        new USER_COMMENT_DTO(commentaire.getIdMembre().getNom(),commentaire.getIdMembre().getPrenom())
+                        , commentaire.getDatePublication()
+                        , commentaire.getContenu()
+                )
+        ).toList();
+        return new ANONCE_DTO_HUB(
+                A.getNomAnonce(),
+                A.getSurface(),
+                A.getNbreSalleBain(),
+                A.getNbreChambres(),
+                A.getNbreEtages(),
+                A.getPrix(),
+                A.getImageUrl(),
+                A.getDescription(),
+                A.getEmail(),
+                A.getTelephone(),
+                A.getIdVille().getIdVille(),
+                A.getIdVille().getIdRegion().getIdRegion(),
+                comments
+        );
+    }
 }
+

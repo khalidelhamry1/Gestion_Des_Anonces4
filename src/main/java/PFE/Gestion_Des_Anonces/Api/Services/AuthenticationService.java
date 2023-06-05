@@ -11,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +51,7 @@ public class AuthenticationService {
         return ResponseEntity.ok().header("Authorization", jwtToken).build();
         }
 
-    public ResponseEntity<String> authenticate(LOGIN_REQUEST_DTO request) {
+    public ResponseEntity<Map<String,String>> authenticate(LOGIN_REQUEST_DTO request) {
         List<User> userList = userRepository.findByEmail(request.email());
         if(userList.size() == 0){
             return ResponseEntity.status(401).build();
@@ -59,25 +62,13 @@ public class AuthenticationService {
             if(!samePassword)return ResponseEntity.status(401).build();
             System.out.println("Password Verified !");
             String Token = jwtService.generateToken(user);
-            return ResponseEntity.ok().header("Authorization", Token).build();
+            System.out.println(Token);
+            Map<String ,String> res = new HashMap<>();
+            res.put("token",Token);
+            return ResponseEntity.ok().body(res);
         }
         return ResponseEntity.status(401).build();
     }
 
-    public ResponseEntity<Boolean> isTokenValid(String token) {
-        try {
-            String email = jwtService.extractEmail(token);
-            List<User> userList = userRepository.findByEmail(email);
-            if (userList.size() == 0) {
-                return ResponseEntity.ok().body(false);
-            }
-            User user = userList.get(0);
-            if (jwtService.isTokenValid(token, user)) {
-                return ResponseEntity.ok().body(true);
-            }
-            return ResponseEntity.ok().body(false);
-        }catch (Exception e){
-            return ResponseEntity.ok().body(false);
-        }
-    }
+
 }

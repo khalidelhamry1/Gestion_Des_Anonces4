@@ -81,8 +81,10 @@ public class SecurityConfig {
                         .hasAnyAuthority("USER","ADMIN")
                         .requestMatchers("/api/Admin/**")
                         .hasAuthority("ADMIN")
-                        .requestMatchers("/api/Search/**")
-                        .permitAll()
+                        .requestMatchers("/api/Auth/VerifyTokenAdmin")
+                        .hasAuthority("ADMIN")
+                        .requestMatchers("/api/Auth/VerifyToken")
+                        .hasAnyAuthority("USER","ADMIN")
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 

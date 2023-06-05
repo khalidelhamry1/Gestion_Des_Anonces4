@@ -1,5 +1,6 @@
 package PFE.Gestion_Des_Anonces.Api.Controllers;
 
+import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.ANONCE_DTO_HUB;
 import PFE.Gestion_Des_Anonces.Api.utils.DTO_CLASSES.ANONCE_DTO_SEARCH;
 import PFE.Gestion_Des_Anonces.Api.Services.SearchService;
 import PFE.Gestion_Des_Anonces.Api.utils.SearchFilter;
@@ -18,6 +19,11 @@ public class SearchController {
     @GetMapping
     public List<ANONCE_DTO_SEARCH> getAll(){
         return searchService.getAll();
+    }
+
+    @GetMapping(path = "/Anonce")
+    public ANONCE_DTO_HUB getAnonce(@RequestParam Long id){
+        return searchService.getAnonce(id);
     }
 
     @PostMapping(path = "/filter")

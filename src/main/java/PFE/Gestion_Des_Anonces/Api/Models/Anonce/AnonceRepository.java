@@ -10,11 +10,12 @@ import java.util.List;
 public interface AnonceRepository extends JpaRepository<Anonce,Long> {
 
     @Query(value="SELECT distinct a.* FROM anonce a " +
-            "WHERE a.prix > :minPrix " +
-            "AND a.prix < :maxPrix " +
+            "WHERE a.prix >= :minPrix " +
+            "AND a.prix <= :maxPrix " +
             "AND a.nbre_chambres >= :chambres " +
             "AND a.nbre_salle_bain >= :salles " +
-            "AND a.id_ville like :ville "
+            "AND a.id_ville like :ville " +
+            "AND a.enabled "
             , nativeQuery = true
     )
     List<Anonce> getWithFilterNoCategories(float minPrix,

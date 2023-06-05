@@ -189,7 +189,7 @@ public class SetupDataLoader implements
                         .imageUrl("https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2")
                         .latitude((float)Math.random()*90)
                         .longitude((float)Math.random()*180)
-                        .nomAnonce("Serena Hub")
+                        .nomAnonce("Serena no Piscine")
                         .type('L')
                         .prix(100)
                         .telephone("0694853606")
@@ -207,7 +207,25 @@ public class SetupDataLoader implements
                         .imageUrl("https://i.insider.com/60ae84bea412370019d321ff?width=700")
                         .latitude((float)Math.random()*90)
                         .longitude((float)Math.random()*180)
-                        .nomAnonce("Serena Hub")
+                        .nomAnonce("Serena no Appartement")
+                        .type('A')
+                        .prix(100)
+                        .telephone("0694853606")
+                        .surface(400)
+                        .nbreChambres(5)
+                        .nbreEtages(1)
+                        .nbreSalleBain(10)
+                        .build(),
+                Anonce.builder()
+                        .email("email@email.com")
+                        .enabled(false)
+                        .dateCreationAnonce(Timestamp.valueOf(LocalDateTime.now()))
+                        .description("Nestled amidst breathtaking  decor, plush furnishings.")
+                        .idProprietaire(user1)
+                        .imageUrl("https://i.insider.com/60ae84bea412370019d321ff?width=700")
+                        .latitude((float)Math.random()*90)
+                        .longitude((float)Math.random()*180)
+                        .nomAnonce("Disabled")
                         .type('A')
                         .prix(100)
                         .telephone("0694853606")
@@ -216,11 +234,18 @@ public class SetupDataLoader implements
                         .nbreEtages(1)
                         .nbreSalleBain(10)
                         .build());
+        comments = commentaireRepository.findAll();
+        int i = 0;
+        for(Commentaire C : comments){
+            C.setIdAnonce(anonces.get(i%anonces.size()));
+            i++;
+        }
         for(Anonce X : anonces) {
             X.setCategories(Categories);
-            X.setCommentaires(comments);
             X.setIdVille(casa);
         }
+        anonces.get(1).setCategories(List.of(Categories.get(1)));
+        anonces.get(2).setCategories(List.of(Categories.get(0)));
         anonceRepository.saveAll(anonces);
     }
 
