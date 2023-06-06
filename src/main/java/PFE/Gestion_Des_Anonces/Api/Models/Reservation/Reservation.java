@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Reservation implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idReservation;
     @ManyToOne
     @JoinColumn(name = "idAnonce")

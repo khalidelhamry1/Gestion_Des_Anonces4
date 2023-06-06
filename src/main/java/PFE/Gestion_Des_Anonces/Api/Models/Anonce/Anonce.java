@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,42 +29,31 @@ public class Anonce implements Serializable {
     private int surface , nbreSalleBain , nbreEtages , nbreChambres;
     private float prix, latitude , longitude ;
     private char type ;
-    private Boolean enabled=true;
+    private Boolean enabled;
     private Timestamp dateCreationAnonce;
-
     private String email;
-
     private String telephone;
-
     private String nomAnonce;
-
     private String description;
-
-
     private String imageUrl;
     @ManyToOne
     @JoinColumn(name = "idVille")
-
     private Ville idVille;
 
     @ManyToOne
     @JoinColumn(name = "idProprietaire")
-
     private User idProprietaire;
 
     @ManyToMany
-    @JsonIgnore
     @JoinTable(
             name = "Categories_Anonces",
             joinColumns = @JoinColumn(name = "idAnonce"),
             inverseJoinColumns = @JoinColumn(name = "idCategorie")
     )
-    private List<Categorie> categories;
-
+    private List<Categorie> categories=new ArrayList<>();
     @OneToMany(mappedBy="idAnonce")
-    private List<Reservation> Reservations;
-
+    private List<Reservation> Reservations=new ArrayList<>();
     @OneToMany(mappedBy="idAnonce")
-    private List<Commentaire> commentaires;
+    private List<Commentaire> commentaires=new ArrayList<>();
 
 }

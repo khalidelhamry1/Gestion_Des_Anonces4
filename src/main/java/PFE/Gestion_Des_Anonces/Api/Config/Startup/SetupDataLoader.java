@@ -80,6 +80,7 @@ public class SetupDataLoader implements
 
         List<Role> adminRole = roleRepository.findByName("ADMIN");
         List<Role> membreRole = roleRepository.findByName("MEMBRE");
+        if(userRepository.findByEmail("test@test.com").isEmpty()){
         User user = new User();
         user.setNom("Test");
         user.setPrenom("Test");
@@ -88,14 +89,17 @@ public class SetupDataLoader implements
         user.setRoles(adminRole);
         user.setEnabled(true);
         userRepository.save(user);
-        User user1 = new User();
-        user1.setNom("Test_Membre");
-        user1.setPrenom("Test_Membre");
-        user1.setPassword(passwordEncoder.encode("test"));
-        user1.setEmail("Test_Membre@test.com");
-        user1.setRoles(membreRole);
-        user1.setEnabled(true);
-        userRepository.save(user1);
+        }
+        if(userRepository.findByEmail("Test_Membre@test.com").isEmpty()) {
+            User user1 = new User();
+            user1.setNom("Test_Membre");
+            user1.setPrenom("Test_Membre");
+            user1.setPassword(passwordEncoder.encode("test"));
+            user1.setEmail("Test_Membre@test.com");
+            user1.setRoles(membreRole);
+            user1.setEnabled(true);
+            userRepository.save(user1);
+        }
         saveAnonces();
         saveAnonces();
         saveAnonces();

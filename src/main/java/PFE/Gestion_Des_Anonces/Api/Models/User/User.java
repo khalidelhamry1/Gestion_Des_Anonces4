@@ -60,7 +60,7 @@ public class User implements UserDetails, Serializable {
                     name = "user_id", referencedColumnName = "idUser"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+    private List<Role> roles=new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
