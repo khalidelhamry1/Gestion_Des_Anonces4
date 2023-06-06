@@ -2,6 +2,7 @@ package PFE.Gestion_Des_Anonces.Api.Models.User;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +39,8 @@ public class User implements UserDetails, Serializable {
     private String email;
     private String nom, password, prenom;
     private Character sexe;
-    private Timestamp dateNaissance, dateCreationCompte;
+    private Timestamp dateCreationCompte;
+    private LocalDate dateNaissance;
     @OneToMany(mappedBy = "idProprietaire")
     @JsonIgnore
     private List<Anonce> anonces;
@@ -50,7 +52,7 @@ public class User implements UserDetails, Serializable {
     private List<Evaluation> evaluations;
     @OneToMany(mappedBy = "idProprietaire")
     private List<Evaluation> evaluationsCree;
-    private Boolean Enabled;
+    private Boolean Enabled=true;
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -109,6 +111,14 @@ public class User implements UserDetails, Serializable {
     @Override
     public boolean isEnabled() {
         return Enabled;
+    }
+
+    public void reserver(Reservation R) throws Exception {
+        if(this.Enabled){
+            this.reservations.add(R);
+        }else{
+            throw new Exception();
+        }
     }
 }
 

@@ -12,6 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,7 @@ public class AuthenticationService {
 
 
 
-    public ResponseEntity<String> register(User request) {
+    public ResponseEntity<Map<String,String>> register(User request) {
         List<User> userList = userRepository.findByEmail(request.getEmail());
         boolean UserExists = userList.size() == 1;
         if(UserExists) {
@@ -44,11 +46,17 @@ public class AuthenticationService {
                 .nom(request.getNom())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roles(roleRepository.findByName("ROLE_USER"))
+                .roles(roleRepository.findByName("MEMBRE"))
+                .sexe(request.getSexe())
+                .dateNaissance(request.getDateNaissance())
+                .dateCreationCompte(new Timestamp(System.currentTimeMillis()))
+                .Enabled(true)
                 .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return ResponseEntity.ok().header("Authorization", jwtToken).build();
+        String jwtToken = jwtService.generateToken(user);
+        Map<String ,String> res = new HashMap<>();
+        res.put("token",jwtToken);
+        return ResponseEntity.ok().body(res);
         }
 
     public ResponseEntity<Map<String,String>> authenticate(LOGIN_REQUEST_DTO request) {
@@ -57,7 +65,7 @@ public class AuthenticationService {
             return ResponseEntity.status(401).build();
         }
         User user = userList.get(0);
-        if(user != null){
+        if(user != null && user.getEnabled()){
             boolean samePassword = passwordEncoder.matches(request.password(),user.getPassword());
             if(!samePassword)return ResponseEntity.status(401).build();
             System.out.println("Password Verified !");

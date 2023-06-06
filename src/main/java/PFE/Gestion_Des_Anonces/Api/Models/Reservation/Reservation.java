@@ -2,6 +2,7 @@ package PFE.Gestion_Des_Anonces.Api.Models.Reservation;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import PFE.Gestion_Des_Anonces.Api.Models.Anonce.Anonce;
 import PFE.Gestion_Des_Anonces.Api.Models.User.User;
@@ -28,6 +29,11 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "idMembre")
     private User idMembre;
 
-    private Timestamp DateReservationArrive;
-    private Timestamp DateReservationDepart;
+    private LocalDate DateReservationArrive;
+    private LocalDate DateReservationDepart;
+    private int nbrEnfants;
+    private int nbrAdultes;
+    private String emailClient;
+    private Boolean accepted;
+
 }
